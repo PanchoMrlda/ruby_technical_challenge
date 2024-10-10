@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  ruby-app:
+    image: ruby:3.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /ruby-app
+    volumes:
+      - .:/ruby-app
