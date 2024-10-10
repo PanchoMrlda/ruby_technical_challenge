@@ -9,3 +9,5 @@ services:
     working_dir: /ruby-app
     volumes:
       - .:/ruby-app
+    environment:
+      RAILS_ENV: development
