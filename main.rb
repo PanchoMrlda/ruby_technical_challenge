@@ -23,7 +23,6 @@ def main
       end
     end
     reservations.sort_by! { |r| r.from }
-    reservations.all? { |r| InputValidator.validate_date(r.from) && InputValidator.validate_date(r.to) }
     reservations.each do |origin|
       next if origin.type == Reservation::RESERVATION_TYPES[:HOTEL] || completed_reservations.include?(origin)
 
