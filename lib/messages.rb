@@ -1,21 +1,21 @@
 class Messages
   def self.invalid_iata_code(iata_code)
-    "Invalid IATA code: #{iata_code}. It must be exactly 3 uppercase letters."
+    I18n.t('invalid_iata_code', iata_code: iata_code)
   end
 
   def self.invalid_date_format(date_str)
-    "Invalid date format: #{date_str}. It must be in the format YYYY-MM-DD."
+    I18n.t('invalid_date_format', date_str: date_str)
   end
 
   def self.no_file_provided
-    'No file provided'
+    I18n.t('no_file_provided')
   end
 
   def self.no_file_found(filename)
-    "No file found: #{filename}"
+    I18n.t('no_file_found', filename: filename)
   end
 
   def self.no_user_origin_provided
-    'No user origin provided'
+    I18n.t('no_user_origin_provided')
   end
 end
