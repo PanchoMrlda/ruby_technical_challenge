@@ -27,6 +27,8 @@ class Reservation
       @hour_to = string_line.split[6]
       @location_to = string_line.split[5]
     end
+    InputValidator.validate_date(@from)
+    InputValidator.validate_date(@to)
   end
 
   def self.get_connection(target, list)

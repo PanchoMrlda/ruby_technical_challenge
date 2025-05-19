@@ -31,8 +31,28 @@ RSpec.describe 'main script' do
     File.delete(input_path) if File.exist?(input_path)
   end
 
-  context 'when running the script directly' do
+  context 'when running the script correctly' do
     it 'prints the reservation data to the console' do
+      ARGV[0] = input_path
+      ENV['BASED'] = 'SVQ'
+
+      output = StringIO.new
+      $stdout = output
+      main
+      $stdout = STDOUT
+
+      expect(output.string).to match(/Flight from SVQ to BCN at 2023-03-02 06:40 to 09:10/)
+    end
+
+    it 'parses a large dataset correctly' do
+      file = File.open(input_path, 'a')
+      reservations_count = 10_000
+
+      reservations_count.times do
+        file.write(input_path)
+      end
+      file.rewind
+
       ARGV[0] = input_path
       ENV['BASED'] = 'SVQ'
 

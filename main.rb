@@ -1,4 +1,5 @@
 require 'time'
+require 'set'
 require './app/models/reservation'
 require './app/helpers/output_formatter'
 require './app/helpers/input_validator'
@@ -15,15 +16,12 @@ def main
     InputValidator.validate_iata_code(user_origin)
 
     reservations = []
-    completed_reservations = []
-    File.open(filename, 'r') do |f|
-      f.each_line do |line|
-        next unless line.include?('SEGMENT')
-        reservations << Reservation.new(line)
-      end
+    completed_reservations = Set.new
+    File.foreach(filename) do |line|
+      next unless line.include?('SEGMENT')
+      reservations << Reservation.new(line)
     end
     reservations.sort_by! { |r| r.from }
-    reservations.all? { |r| InputValidator.validate_date(r.from) && InputValidator.validate_date(r.to) }
     reservations.each do |origin|
       next if origin.type == Reservation::RESERVATION_TYPES[:HOTEL] || completed_reservations.include?(origin)
 
@@ -51,12 +49,12 @@ def main
           reservation_data.type == origin.type &&
           reservation_data.location_from == origin.location_to }
       end
-      completed_reservations << origin
+      completed_reservations.add(origin)
       if destination.nil?
         print_service.print_empty_line
         next
       end
-      completed_reservations << destination
+      completed_reservations.add(destination)
       print_service.print_trip_data(destination)
       print_service.print_empty_line
     end
