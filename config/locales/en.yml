@@ -1,0 +1,6 @@
+en:
+  invalid_iata_code: 'Invalid IATA code: %{iata_code}. It must be exactly 3 uppercase letters.'
+  invalid_date_format: 'Invalid date format: %{date_str}. It must be in the format YYYY-MM-DD.'
+  no_file_provided: 'No file provided'
+  no_file_found: 'No file found: %{filename}'
+  no_user_origin_provided: 'No user origin provided'

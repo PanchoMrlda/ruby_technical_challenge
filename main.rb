@@ -1,5 +1,8 @@
 require 'time'
 require 'set'
+require 'i18n'
+I18n.load_path += Dir[File.expand_path("config/locales/*.yml")]
+I18n.default_locale = :en
 require './app/models/reservation'
 require './app/helpers/output_formatter'
 require './app/helpers/input_validator'
