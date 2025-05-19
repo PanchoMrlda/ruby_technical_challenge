@@ -16,11 +16,9 @@ def main
 
     reservations = []
     completed_reservations = []
-    File.open(filename, 'r') do |f|
-      f.each_line do |line|
-        next unless line.include?('SEGMENT')
-        reservations << Reservation.new(line)
-      end
+    File.foreach(filename) do |line|
+      next unless line.include?('SEGMENT')
+      reservations << Reservation.new(line)
     end
     reservations.sort_by! { |r| r.from }
     reservations.each do |origin|
