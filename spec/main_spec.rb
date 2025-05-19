@@ -55,7 +55,7 @@ RSpec.describe 'main script' do
       main
       $stdout = STDOUT
 
-      expect(output.string).to match(/No file provided/)
+      expect(output.string).to match(Messages.no_file_provided)
     end
 
     it 'returns an error if the file does not exist' do
@@ -67,7 +67,7 @@ RSpec.describe 'main script' do
       main
       $stdout = STDOUT
 
-      expect(output.string).to match(/No file found/)
+      expect(output.string).to match(Messages.no_file_found(ARGV[0]))
     end
 
     it 'returns an error if no origin is provided' do
@@ -79,7 +79,36 @@ RSpec.describe 'main script' do
       main
       $stdout = STDOUT
 
-      expect(output.string).to match(/No user origin provided/)
+      expect(output.string).to match(Messages.no_user_origin_provided)
+    end
+
+    it 'returns an error if the origin is not valid' do
+      ARGV[0] = input_path
+      ENV['BASED'] = 'invalid'
+
+      output = StringIO.new
+      $stdout = output
+      main
+      $stdout = STDOUT
+
+      expect(output.string).to match(Messages.invalid_iata_code(ENV['BASED']))
+    end
+
+    it 'returns an error if the date is not valid' do
+      wrong_date = '23-03-02'
+      File.write(input_path, <<~TEXT)
+        RESERVATION
+        SEGMENT: Flight SVQ #{wrong_date} 06:40 -> BCN 09:10
+      TEXT
+      ARGV[0] = input_path
+      ENV['BASED'] = 'SVQ'
+
+      output = StringIO.new
+      $stdout = output
+      main
+      $stdout = STDOUT
+
+      expect(output.string).to match(Messages.invalid_date_format(wrong_date))
     end
   end
 end
