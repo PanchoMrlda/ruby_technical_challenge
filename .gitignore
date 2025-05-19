@@ -1,5 +1,2 @@
 # Avoid IDE files
 .idea
-
-# Avoid testing coverage files
-coverage
