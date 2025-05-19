@@ -1,6 +1,8 @@
 require 'time'
 require './app/models/reservation'
 require './app/helpers/output_formatter'
+require './app/helpers/input_validator'
+require './lib/messages'
 
 def main
   filename = ARGV[0]
@@ -8,8 +10,9 @@ def main
   print_service = OutputFormatter.new
 
   begin
-    raise StandardError, 'No file provided' if filename.nil?
-    raise StandardError, 'No user origin provided' if user_origin.nil? || user_origin == ''
+    raise StandardError, Messages.no_file_provided if filename.nil?
+    raise StandardError, Messages.no_user_origin_provided if user_origin.nil? || user_origin == ''
+    InputValidator.validate_iata_code(user_origin)
 
     reservations = []
     completed_reservations = []
@@ -20,6 +23,7 @@ def main
       end
     end
     reservations.sort_by! { |r| r.from }
+    reservations.all? { |r| InputValidator.validate_date(r.from) && InputValidator.validate_date(r.to) }
     reservations.each do |origin|
       next if origin.type == Reservation::RESERVATION_TYPES[:HOTEL] || completed_reservations.include?(origin)
 
@@ -57,7 +61,7 @@ def main
       print_service.print_empty_line
     end
   rescue Errno::ENOENT
-    puts "\e[31mNo file found\e[0m"
+    puts "\e[31m#{Messages.no_file_found(filename)}\e[0m"
   rescue StandardError => error
     puts "\e[31m#{error.message}\e[0m"
   end
